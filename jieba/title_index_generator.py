@@ -18,9 +18,11 @@ class IndexGenerator:
         result = self.cursor.fetchall()
         for item in result:
             print("processing #", item[0])
-            content = item[3].replace("\r", "").replace(" ", "")
-            seg_list = jieba.cut_for_search(content)
-            sql = "insert ignore into mapping(term_id, page_id) values "
+            if item[2] is None:
+                continue
+            title = item[2].replace("\r", "").replace(" ", "")
+            seg_list = jieba.cut_for_search(title)
+            sql = "insert ignore into title_mapping(term_id, page_id) values "
             params = list()
             hasMapping = False
             for term in seg_list:
